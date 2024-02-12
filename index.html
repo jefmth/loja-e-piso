@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pesquisar</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        #content p:not(.found) {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mt-4">Pesquisar</h1>
+        <input type="text" id="search" class="form-control my-4" placeholder="Digite para pesquisar...">
+        <div id="content">
+            <!-- Os dados da planilha serão inseridos aqui -->
+        </div>
+    </div>
+
+    <script>
+        // Substitua YOUR_SHEET_ID e YOUR_API_KEY pelos seus valores
+		//1ZCWqyCQHJ62LOIv9wsrdVw3Dy9aP7Aq8Dr24KTn0rIg id tabela teste api
+        var sheetId = "1maX8n8Z-yJeHwNRO3VRblgr_qdrAGLEH2csn8PUuoy4";
+        var apiKey = "AIzaSyASLjEe3NpRHAiDKlq1rFk9IWycpSUkbFE";
+        var url = "https://sheets.googleapis.com/v4/spreadsheets/" + sheetId + "/values/A:B?key=" + apiKey;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                var rows = data.values;
+                var html = '';
+                for (var i = 0; i < rows.length; i++) {
+                    html += '<p class="my-2">' + rows[i][0] + ' - ' + rows[i][1] + '</p>';
+                }
+                document.getElementById('content').innerHTML = html;
+            })
+            .catch(error => console.error('Error:', error));
+
+        document.getElementById('search').addEventListener('keyup', function() {
+            var searchQuery = this.value.toLowerCase();
+            var allParagraphs = document.querySelectorAll('#content p');
+            allParagraphs.forEach(function(p) {
+                if (p.textContent.toLowerCase().includes(searchQuery)) {
+                    p.classList.add('found');
+                } else {
+                    p.classList.remove('found');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
