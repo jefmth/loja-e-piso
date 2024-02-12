@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
     <title>Pesquisar</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -10,17 +10,16 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container-fluid">
         <h1 class="text-center mt-4">Pesquisar</h1>
         <input type="text" id="search" class="form-control my-4" placeholder="Digite para pesquisar...">
-        <div id="content">
+        <div id="content" class="table-responsive">
             <!-- Os dados da planilha serão inseridos aqui -->
         </div>
     </div>
 
     <script>
         // Substitua YOUR_SHEET_ID e YOUR_API_KEY pelos seus valores
-		//1ZCWqyCQHJ62LOIv9wsrdVw3Dy9aP7Aq8Dr24KTn0rIg id tabela teste api
         var sheetId = "1maX8n8Z-yJeHwNRO3VRblgr_qdrAGLEH2csn8PUuoy4";
         var apiKey = "AIzaSyASLjEe3NpRHAiDKlq1rFk9IWycpSUkbFE";
         var url = "https://sheets.googleapis.com/v4/spreadsheets/" + sheetId + "/values/A:B?key=" + apiKey;
@@ -29,28 +28,34 @@
             .then(response => response.json())
             .then(data => {
                 var rows = data.values;
-                var html = '';
+                var html = '<table class="table">';
                 for (var i = 0; i < rows.length; i++) {
-                    html += '<p class="my-2">' + rows[i][0] + ' - ' + rows[i][1] + '</p>';
+                    if (i === 0) {
+                        html += '<tr><th scope="col">' + rows[i][0] + '</th><th scope="col">' + rows[i][1] + '</th></tr>';
+                    } else {
+                        html += '<tr><td>' + rows[i][0] + '</td><td>' + rows[i][1] + '</td></tr>';
+                    }
                 }
+                html += '</table>';
                 document.getElementById('content').innerHTML = html;
             })
             .catch(error => console.error('Error:', error));
 
         document.getElementById('search').addEventListener('keyup', function() {
             var searchQuery = this.value.toLowerCase();
-            var allParagraphs = document.querySelectorAll('#content p');
-            allParagraphs.forEach(function(p) {
-                if (p.textContent.toLowerCase().includes(searchQuery)) {
-                    p.classList.add('found');
+            var allRows = document.querySelectorAll('#content table tr');
+            allRows.forEach(function(row) {
+                if (row.textContent.toLowerCase().includes(searchQuery)) {
+                    row.classList.add('found');
                 } else {
-                    p.classList.remove('found');
+                    row.classList.remove('found');
                 }
             });
         });
     </script>
 </body>
 </html>
+
 
 
 
