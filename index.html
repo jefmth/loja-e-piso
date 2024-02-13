@@ -1,63 +1,35 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
-    <title>Pesquisar</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <style>
-        #content p:not(.found) {
-            display: none;
-        }
-    </style>
+<style>
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #008B8B;
+}
+#img {
+  max-width: 100%;
+  height: auto;
+}
+</style>
+<script>
+window.onload = function() {
+  setTimeout(function() {
+    document.getElementById('img').style.display = 'none';
+    window.location.href = 'pesquisar.html';
+  }, 3000);
+};
+</script>
 </head>
 <body>
-    <div class="container-fluid">
-        <h1 class="text-center mt-4">Pesquisar</h1>
-        <input type="text" id="search" class="form-control my-4" placeholder="Digite para pesquisar...">
-        <br>
-        <div id="content" class="table-responsive">
-            <!-- Os dados da planilha serão inseridos aqui -->
-        </div>
-    </div>
 
-    <script>
-        // Substitua YOUR_SHEET_ID e YOUR_API_KEY pelos seus valores
-        var sheetId = "1maX8n8Z-yJeHwNRO3VRblgr_qdrAGLEH2csn8PUuoy4";
-        var apiKey = "AIzaSyASLjEe3NpRHAiDKlq1rFk9IWycpSUkbFE";
-        var url = "https://sheets.googleapis.com/v4/spreadsheets/" + sheetId + "/values/A:B?key=" + apiKey;
+<img id="img" src="imagens/azul.png" alt="Imagem">
 
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                var rows = data.values;
-                var html = '<table class="table">';
-                for (var i = 0; i < rows.length; i++) {
-                    if (i === 0) {
-                        html += '<tr><th scope="col">' + rows[i][0] + '</th><th scope="col">' + rows[i][1] + '</th></tr>';
-                    } else {
-                        html += '<tr><td>' + rows[i][0] + '</td><td>' + rows[i][1] + '</td></tr>';
-                    }
-                }
-                html += '</table>';
-                document.getElementById('content').innerHTML = html;
-            })
-            .catch(error => console.error('Error:', error));
-
-        document.getElementById('search').addEventListener('keyup', function() {
-            var searchQuery = this.value.toLowerCase();
-            var allRows = document.querySelectorAll('#content table tr');
-            allRows.forEach(function(row) {
-                if (row.textContent.toLowerCase().includes(searchQuery)) {
-                    row.classList.add('found');
-                } else {
-                    row.classList.remove('found');
-                }
-            });
-        });
-    </script>
 </body>
 </html>
-
-
 
 
 

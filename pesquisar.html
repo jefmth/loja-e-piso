@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>Pesquisar</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        #resultados {
+            margin-top: 20px;
+        }
+
+        .found {
+            background-color: #dff0d8; /* Cor de destaque para as linhas encontradas */
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <h1 class="text-center mt-4">Pesquisar</h1>
+        <input type="text" id="search" class="form-control my-4" placeholder="Digite para pesquisar...">
+        <div id="resultados" class="table-responsive">
+            <!-- Os resultados da pesquisa serão inseridos aqui -->
+        </div><br>
+        <div id="content" class="table-responsive">
+            <!-- Os dados da planilha serão inseridos aqui -->
+        </div>
+    </div>
+
+    <script>
+        // Substitua YOUR_SHEET_ID e YOUR_API_KEY pelos seus valores
+        var sheetId = "1maX8n8Z-yJeHwNRO3VRblgr_qdrAGLEH2csn8PUuoy4";
+        var apiKey = "AIzaSyASLjEe3NpRHAiDKlq1rFk9IWycpSUkbFE";
+        var url = "https://sheets.googleapis.com/v4/spreadsheets/" + sheetId + "/values/A:B?key=" + apiKey;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                var rows = data.values;
+                var html = '<table class="table">';
+                for (var i = 0; i < rows.length; i++) {
+                    if (i === 0) {
+                        html += '<tr><th scope="col">' + rows[i][0] + '</th><th scope="col">' + rows[i][1] + '</th></tr>';
+                    } else {
+                        html += '<tr><td>' + rows[i][0] + '</td><td>' + rows[i][1] + '</td></tr>';
+                    }
+                }
+                html += '</table>';
+                document.getElementById('content').innerHTML = html;
+            })
+            .catch(error => console.error('Error:', error));
+
+        document.getElementById('search').addEventListener('keyup', function() {
+            var searchQuery = this.value.toLowerCase();
+            var allRows = document.querySelectorAll('#content table tr');
+            var resultadosHtml = '<table class="table">';
+
+            allRows.forEach(function(row) {
+                // Verifica se qualquer célula da linha contém o texto de pesquisa
+                var found = Array.from(row.cells).some(cell => cell.textContent.toLowerCase().includes(searchQuery));
+
+                if (found) {
+                    row.classList.add('found');
+                    resultadosHtml += row.outerHTML;
+                } else {
+                    row.classList.remove('found');
+                }
+            });
+
+            resultadosHtml += '</table>';
+            document.getElementById('resultados').innerHTML = resultadosHtml;
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
